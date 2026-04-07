@@ -3,11 +3,11 @@ services:
     image: postgres:15
     container_name: finance_db
     environment:
-      - POSTGRES_USER=user
-      - POSTGRES_PASSWORD=password
-      - POSTGRES_DB=finance_db
+      - POSTGRES_USER: ${POSTGRES_USER}
+      - POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      - POSTGRES_DB: ${POSTGRES_DB}
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U user -d finance_db"]
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
       interval: 3s
       timeout: 3s
       retries: 10
@@ -19,15 +19,13 @@ services:
   app:
     build: .
     container_name: finance_app
-    restart: always
+    restart: unless-stopped
     depends_on:
       db:
          condition: service_healthy
     ports:
       - "8000:8000"
-    environment:
-      # Sobrescreve a URL do banco para apontar para o container 'db'
-      - DATABASE_URL=postgresql://user:password@db:5432/finance_db
-
+    env_file: .env
+    
 volumes:
   postgres_data:
