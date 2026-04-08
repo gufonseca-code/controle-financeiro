@@ -18,6 +18,20 @@ def get_db():
 # CREATE
 @router.post("/", response_model=TransactionResponse)
 def create_transaction(transaction: TransactionCreate, db: Session = Depends(get_db)):
+    if transaction.category_id:
+        category = db.query(Category).filter(
+            Category.id == transaction.category_id
+        ).first()
+
+        if not category:
+            raise HTTPException(status_code=404, detail="Category not found")
+
+        if category.type != transaction.type:
+            raise HTTPException(
+                status_code=400,
+                detail=f"Category '{category.name}' belongs to '{category.type}', not '{transaction.type}'"
+            )
+
     db_transaction = Transaction(**transaction.model_dump())
     db.add(db_transaction)
     db.commit()
