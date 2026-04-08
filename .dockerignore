@@ -15,6 +15,7 @@ htmlcov/
 .tox/
 .vscode/
 .idea/
+.codex
 *.swp
 *.swo
 *~

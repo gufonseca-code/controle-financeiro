@@ -77,3 +77,5 @@ dmypy.json
 
 # OS
 Thumbs.db
+
+.codex
