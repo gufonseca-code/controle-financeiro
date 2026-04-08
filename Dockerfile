@@ -9,7 +9,7 @@ WORKDIR /app
 # pode precisar de bibliotecas de desenvolvimento do Postgres
 USER root
 RUN dnf install -y gcc postgresql-devel && dnf clean all
-USER 1001
+
 
 # Copia e instala as dependências do Python
 COPY requirements.txt .
@@ -17,6 +17,9 @@ RUN pip install --no-cache-dir -r requirements.txt
 
 # Copia o restante do código
 COPY . .
+RUN chmod +x entrypoint.sh
+
+USER 1001
 
 # Comando para rodar a aplicação
-CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000"]
+CMD ["./entrypoint.sh"]
