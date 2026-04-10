@@ -1,7 +1,12 @@
+from __future__ import annotations
+from typing import TYPE_CHECKING
 from sqlalchemy import Integer, String
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from app.db.database import Base
 from app.enums import TransactionType
+
+if TYPE_CHECKING:
+    from app.models.transaction import Transaction
 
 class Category(Base):
     __tablename__ = "categories"
@@ -10,6 +15,6 @@ class Category(Base):
     name: Mapped[str] = mapped_column(String, nullable=False)
     type: Mapped[TransactionType] = mapped_column(String, nullable=False)
 
-    transactions: Mapped[list["Transaction"]] = relationship(
+    transactions: Mapped[list[Transaction]] = relationship(
         "Transaction", back_populates="category"
     )
