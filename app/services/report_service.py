@@ -1,5 +1,5 @@
 import logging
-from datetime import datetime, date
+from datetime import datetime, timezone
 from sqlalchemy.orm import Session
 from sqlalchemy import func
 
@@ -45,7 +45,7 @@ def generate_monthly_report(db: Session, year: int, month: int) -> MonthlyReport
         total_income=total_income,
         total_expense=total_expense,
         net=total_income - total_expense,
-        generated_at=datetime.utcnow(),
+        generated_at=datetime.now(timezone.utc),
     )
 
     db.add(report)
